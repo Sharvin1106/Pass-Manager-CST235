@@ -150,7 +150,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
                     if(user.isEmailVerified()){
                         //redirect to the user profile
-                        startActivity(new Intent(LoginPassword.this,Profile.class));
+                        startActivity(new Intent(LoginPassword.this,MultiFactorAuth.class));
                     }
                     else{
                         user.sendEmailVerification();
