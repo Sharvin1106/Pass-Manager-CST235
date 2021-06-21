@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomSheetContainer"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/bottom_sheet_background"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/proximanovabold"
+        android:padding="15dp"
+        android:textSize="20dp"
+        android:text="Reset Password"
+        android:background="#282828"
+        android:textColor="@color/gray"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Are you sure to reset your password?"
+        android:fontFamily="@font/montserratsemibold"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        android:textColor="@color/white"/>
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/lock"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"/>
+
+    <CheckBox
+        android:id="@+id/captchaCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="I am not a robot"
+        android:fontFamily="@font/montserratmedium"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:layout_marginBottom="50dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/resetBtn"
+            android:layout_height="match_parent"
+            android:layout_marginStart="80dp"
+            android:background="@drawable/button_background"
+            android:text="Reset"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="50dp"
+            android:background="@drawable/button_background"
+            android:text="Cancel"/>
+
+    </LinearLayout>
+</LinearLayout>

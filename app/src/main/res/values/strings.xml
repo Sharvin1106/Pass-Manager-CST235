@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">PasswordManager</string>
+    <color name='paleblack'>#222831</color>
+    <color name='gray'>#878787</color>
+    <color name='darkgrey'>#233958</color>
+</resources>
