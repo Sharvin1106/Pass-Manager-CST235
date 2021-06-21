@@ -31,8 +31,9 @@ public class MultiFactorAuth extends AppCompatActivity {
 
         verifyBtn = findViewById(R.id.buttonotp);
         phoneNoEnteredByTheUser = findViewById((R.id.otpcode));
-
-        String num = "+601136055713";
+        Intent intent = getIntent();
+        String num = intent.getStringExtra("phoneNum");
+        //String num = "+601136055713";
 
         sendVerificationCodeToUser(num);
     }

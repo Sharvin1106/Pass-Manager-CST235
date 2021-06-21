@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "Email not found", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d("TAG", "Is Old User!");
-                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                        Intent myIntent = new Intent(MainActivity.this, LoginPassword.class);
                         myIntent.putExtra("email", email);
                         startActivity(myIntent);
                     }
