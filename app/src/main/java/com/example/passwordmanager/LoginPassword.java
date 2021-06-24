@@ -34,12 +34,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,17 +58,22 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     private EditText editTextPassword;
     private Button loginbtn;
     private CheckBox checkBox;
-    private final String SiteKey = "6LewsUIbAAAAAMZ2YjTIU1JkpckMUEnsKO-BDZsW";
-    private final String SecretKey = "6LewsUIbAAAAAJTlUy3pX_7G416PytCTInQfeH2u";
+    private final String SiteKey = "6LfmB0obAAAAANrWiaf3BBGjZiKFjdNBPpBhaLmc";
+    private final String SecretKey = "6LfmB0obAAAAAAR49kgBz0h0FFFFF7wZqW4kAlqC";
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private int failedAttempts = 0;
     RequestQueue queue;
+    boolean captchaChk;
+    DatabaseReference reff;
+    User user1;
+    String phone;
+    ArrayList<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login_password);
 
         fgtBtn = (TextView) findViewById(R.id.fgtBtn);
         fgtBtn.setOnClickListener(this);
@@ -70,11 +84,16 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
         editTextPassword= (EditText) findViewById(R.id.editTextPassword);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
+        captchaChk = false;
         mAuth = FirebaseAuth.getInstance();
         queue = Volley.newRequestQueue(getApplicationContext());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
+        reff = FirebaseDatabase.getInstance().getReference();
+        FirebaseApp.initializeApp(/*context=*/ this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
     }
 
 
@@ -106,8 +125,10 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                 bottomSheetView.findViewById(R.id.resetBtn).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(LoginPassword.this, "Resetting Password", Toast.LENGTH_SHORT).show();
-                        bottomSheetDialog.dismiss();
+                        if(captchaChk) {
+                            Toast.makeText(LoginPassword.this, "Resetting Password", Toast.LENGTH_SHORT).show();
+                            bottomSheetDialog.dismiss();
+                        }
                     }
                 });
                 CheckBox btmchk = (CheckBox)bottomSheetView.findViewById(R.id.captchaCheck);
@@ -149,8 +170,21 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if(user.isEmailVerified()){
-                        //redirect to the user profile
-                        startActivity(new Intent(LoginPassword.this,MultiFactorAuth.class));
+                        reff.child("Users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("firebase", "Error getting data", task.getException());
+                                }
+                                else {
+                                    phone = String.valueOf(task.getResult().child("phone").getValue());
+                                    Log.d("phone", phone);
+                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
+                                    intent.putExtra("phoneNum", phone);
+                                     startActivity(intent);
+                                }
+                            }
+                        });
                     }
                     else{
                         user.sendEmailVerification();
@@ -190,6 +224,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                             // are calling our verification method.
                             handleVerification(response.getTokenResult());
                         }
+
                     }
                 })
                 .addOnFailureListener(this, new OnFailureListener() {
@@ -229,6 +264,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                             if (jsonObject.getBoolean("success")) {
                                 // if the response is successful then we are
                                 // showing below toast message.
+                                captchaChk = true;
                                 Toast.makeText(LoginPassword.this, "User verified with reCAPTCHA", Toast.LENGTH_SHORT).show();
                             } else {
                                 // if the response if failure we are displaying

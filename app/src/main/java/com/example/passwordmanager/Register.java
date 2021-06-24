@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.content.Intent;
@@ -54,8 +55,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         private boolean captchaChk;
         private FirebaseAuth mAuth;
         RequestQueue queue;
-        private String SiteKey = "6LewsUIbAAAAAMZ2YjTIU1JkpckMUEnsKO-BDZsW";
-        private final String SecretKey = "6LewsUIbAAAAAJTlUy3pX_7G416PytCTInQfeH2u";
+        private String SiteKey = "6LfmB0obAAAAANrWiaf3BBGjZiKFjdNBPpBhaLmc";
+        private final String SecretKey = "6LfmB0obAAAAAAR49kgBz0h0FFFFF7wZqW4kAlqC";
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -141,43 +142,44 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         pass.requestFocus();
                         return;
                 }
-                if (captchaChk) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        mAuth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.VISIBLE);
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                                if (task.isSuccessful()) {
-                                                        User user = new User(email, password, phoneNum);
+                                        if (task.isSuccessful()) {
+                                                User user = new User(email, password, phoneNum);
 
-                                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                        if (task.isSuccessful()) {
-                                                                                Toast.makeText(Register.this, "User has been registered successfully !", Toast.LENGTH_LONG).show();
-                                                                                progressBar.setVisibility(View.GONE);
-
+                                                FirebaseDatabase.getInstance().getReference("Users")
+                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                                user.sendEmailVerification();
+                                                                Toast.makeText(Register.this, "Check Your Email for Verification", Toast.LENGTH_LONG).show();
+                                                                if(user.isEmailVerified()){
+                                                                        if(task.isSuccessful()){
+                                                                                Toast.makeText(Register.this,"User has been registered successfully !",Toast.LENGTH_LONG).show();
+                                                                                progressBar.setVisibility(View.VISIBLE);
                                                                                 //redirect to login layout
-                                                                        } else {
+                                                                        }
+                                                                        else {
                                                                                 Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
                                                                                 progressBar.setVisibility(View.GONE);
                                                                         }
                                                                 }
-                                                        });
+                                                        }
+                                                });
 
 
-                                                } else {
-                                                        Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
-                                                        progressBar.setVisibility(View.GONE);
-                                                }
+                                        } else {
+                                                Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
+                                                progressBar.setVisibility(View.GONE);
                                         }
-                                });
-                } else {
-                        Toast.makeText(this, "Please verify that you are not a robot", Toast.LENGTH_SHORT).show();
-                }
+                                }
+                        });
         }
 
         private void verifyGoogleReCAPTCHA() {
@@ -236,6 +238,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                                         // if the response is successful then we are
                                                         // showing below toast message.
                                                         Toast.makeText(Register.this, "User verified with reCAPTCHA", Toast.LENGTH_SHORT).show();
+                                                        captchaChk = true;
                                                 } else {
                                                         // if the response if failure we are displaying
                                                         // a below toast message.
