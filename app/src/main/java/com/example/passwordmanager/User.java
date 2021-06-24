@@ -12,4 +12,7 @@ public class User {
         this.phone = phone;
     }
 
+    public String getPhone() {
+        return phone;
+    }
 }
