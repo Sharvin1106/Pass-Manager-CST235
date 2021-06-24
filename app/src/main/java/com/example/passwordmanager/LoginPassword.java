@@ -68,6 +68,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     DatabaseReference reff;
     User user1;
     String phone;
+    String email;
     ArrayList<User> userList;
 
     @Override
@@ -85,11 +86,18 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         captchaChk = false;
+
+        Intent intent = getIntent();
+        email = intent.getStringExtra("email");
         mAuth = FirebaseAuth.getInstance();
         queue = Volley.newRequestQueue(getApplicationContext());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
+
+
         reff = FirebaseDatabase.getInstance().getReference();
+
+
         FirebaseApp.initializeApp(/*context=*/ this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
@@ -126,7 +134,18 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onClick(View v) {
                         if(captchaChk) {
-                            Toast.makeText(LoginPassword.this, "Resetting Password", Toast.LENGTH_SHORT).show();
+                            mAuth.sendPasswordResetEmail(email)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(LoginPassword.this, "Email sent", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else{
+                                                Toast.makeText(LoginPassword.this, "Password reset email sent failed", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                             bottomSheetDialog.dismiss();
                         }
                     }
@@ -151,8 +170,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     }
 
     private void userLogin() {
-        Intent intent = getIntent();
-        String email = intent.getStringExtra("email");
+
         String password = editTextPassword.getText().toString().trim();
 
         if(password.length()<6){
