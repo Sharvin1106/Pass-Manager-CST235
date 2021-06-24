@@ -5,7 +5,7 @@
     android:overScrollMode="never"
     android:scrollbars="none"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/paleblack">
+    android:background="@color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,13 +18,14 @@
             android:layout_height="130dp"
             android:layout_marginTop="50dp"
             android:contentDescription="Verify OTP"
-            android:src="@drawable/verified"/>
+            android:src="@drawable/newverify"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="OTP VERIFICATION"
+            android:fontFamily="@font/proximanovabold"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -37,7 +38,8 @@
             android:layout_marginEnd="50dp"
             android:gravity="center"
             android:text="Enter the OTP"
-            android:textColor="@color/white"
+            android:fontFamily="@font/montserratregular"
+            android:textColor="@color/gray"
             android:textSize="14sp"/>
 
         <TextView
@@ -56,7 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/paleblack">
 
             <EditText
                 android:id="@+id/inputCode1"
@@ -159,6 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Didn't receive OTP?"
+                android:fontFamily="@font/montserratregular"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
             <TextView
@@ -174,14 +178,16 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/buttonVerify"
+            android:id="@+id/buttonotp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:text="VERIFY"
+            android:background="@drawable/gradient"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
     </LinearLayout>
+
 
 </ScrollView>

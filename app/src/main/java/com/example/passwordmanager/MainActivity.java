@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
 
+    boolean checked;
     private Executor executor;
     private static BiometricPrompt biometricPrompt;
     private static BiometricPrompt.PromptInfo promptInfo;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         remember = (CheckBox) findViewById(R.id.checkBox);
-
+        checked = false;
         executor = ContextCompat.getMainExecutor(this);
         //BiometricPrompt
         biometricPrompt = new BiometricPrompt(MainActivity.this,
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onAuthenticationFailed() {
 
                 super.onAuthenticationFailed();
-                Toast.makeText(MainActivity.this,"Please Sign In ",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this,"Please Sign In ",Toast.LENGTH_SHORT).show();
             }
         });
         //PromptInfo
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            startActivity(intent);
         }
         else if (checkbox.equals("false")){
-            Toast.makeText(this,"Please Sign In ",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"Please Sign In ",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -110,19 +112,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isChecked()){
-
-                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("remember","true");
-                    editor.apply();
-                    Toast.makeText(MainActivity.this,"Checked",Toast.LENGTH_SHORT).show();
+                      checked = true;
+//                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = preferences.edit();
+//                    editor.putString("remember","true");
+//                    editor.apply();
+//                    Toast.makeText(MainActivity.this,"Checked",Toast.LENGTH_SHORT).show();
 
                 }else if (!compoundButton.isChecked()){
-                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("remember","false");
-                    editor.apply();
-                    Toast.makeText(MainActivity.this,"Unhecked",Toast.LENGTH_SHORT).show();
+                    checked = false;
+//                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = preferences.edit();
+//                    editor.putString("remember","false");
+//                    editor.apply();
+//                    Toast.makeText(MainActivity.this,"Unhecked",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -222,19 +225,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
                 if(task.isSuccessful()) {
                     boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-                    Log.d("TAG", "Naan ingge irukken");
                     if (isNewUser) {
-                        Log.d("TAG", "Is New User!");
-                        Toast.makeText(MainActivity.this, "Email not found", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.mainLayout), "Email not found", Snackbar.LENGTH_SHORT)
+                                .show();
+
+
+                        //Toast.makeText(MainActivity.this, "Email not found", Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.d("TAG", "Is Old User!");
                         Intent myIntent = new Intent(MainActivity.this, LoginPassword.class);
                         myIntent.putExtra("email", email);
+                        myIntent.putExtra("checked", checked);
                         startActivity(myIntent);
                     }
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.mainLayout), "Login attempt failed, try again later", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             }
         });
