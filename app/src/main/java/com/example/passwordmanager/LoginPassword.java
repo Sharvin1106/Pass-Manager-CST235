@@ -34,12 +34,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,6 +65,10 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     private int failedAttempts = 0;
     RequestQueue queue;
     boolean captchaChk;
+    DatabaseReference reff;
+    User user1;
+    String phone;
+    ArrayList<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +89,11 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
         queue = Volley.newRequestQueue(getApplicationContext());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
+        reff = FirebaseDatabase.getInstance().getReference();
+        FirebaseApp.initializeApp(/*context=*/ this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
     }
 
 
@@ -152,11 +170,21 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if(user.isEmailVerified()){
-                        //redirect to the user profile
-                        Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
-                        intent.putExtra("phoneNum", user.getPhoneNumber());
-                        startActivity(intent);
-                        //startActivity(new Intent(LoginPassword.this,MultiFactorAuth.class));
+                        reff.child("Users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("firebase", "Error getting data", task.getException());
+                                }
+                                else {
+                                    phone = String.valueOf(task.getResult().child("phone").getValue());
+                                    Log.d("phone", phone);
+                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
+                                    intent.putExtra("phoneNum", phone);
+                                     startActivity(intent);
+                                }
+                            }
+                        });
                     }
                     else{
                         user.sendEmailVerification();

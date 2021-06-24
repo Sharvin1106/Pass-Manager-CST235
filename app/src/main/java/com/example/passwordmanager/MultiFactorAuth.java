@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class MultiFactorAuth extends AppCompatActivity {
         phoneNoEnteredByTheUser = findViewById((R.id.otpcode));
         Intent intent = getIntent();
         String num = intent.getStringExtra("phoneNum");
+        Log.d("phone num", num);
         //String num = "+601136055713";
 
         sendVerificationCodeToUser(num);

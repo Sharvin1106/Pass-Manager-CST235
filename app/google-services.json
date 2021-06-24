@@ -44,6 +44,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "484097228273-29cjt49avtoh0adt1l4pcvheu6ughr46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.passwordmanager",
+            "certificate_hash": "73b2b3f9d8542744ca4a69baedd46e5e87d87f54"
+          }
+        },
+        {
           "client_id": "484097228273-4ppql2r4q41teo3q99ajqfueegdi0ara.apps.googleusercontent.com",
           "client_type": 3
         }
