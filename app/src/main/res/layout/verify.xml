@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:overScrollMode="never"
     android:scrollbars="none"
+    android:id="@+id/mflayout"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/black">
 

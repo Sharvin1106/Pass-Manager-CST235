@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.content.Intent;
@@ -41,8 +42,11 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +61,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         RequestQueue queue;
         private String SiteKey = "6LfmB0obAAAAANrWiaf3BBGjZiKFjdNBPpBhaLmc";
         private final String SecretKey = "6LfmB0obAAAAAAR49kgBz0h0FFFFF7wZqW4kAlqC";
+        DatabaseReference reff;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -77,7 +82,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 pass= (EditText)findViewById(R.id.password);
                 cpass= (EditText)findViewById(R.id.cpassword);
                 progressBar= (ProgressBar)findViewById(R.id.progressBar);
-
+                reff = FirebaseDatabase.getInstance().getReference("Users");
                 queue = Volley.newRequestQueue(getApplicationContext());
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                         WindowManager.LayoutParams.FLAG_SECURE);
@@ -116,6 +121,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 String password = pass.getText().toString().trim();
                 Matcher matcherNumber = number.matcher(password);
                 Matcher matcher = special.matcher(password);
+                ArrayList<String> secureCodes = new ArrayList<>();
+                secureCodes.add(getRandomNumberString());
+                secureCodes.add(getRandomNumberString());
+                secureCodes.add(getRandomNumberString());
                 String ID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 if (email.isEmpty()) {
                         editEmail.setError("Email is required");
@@ -149,10 +158,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                                         if (task.isSuccessful()) {
-                                                User user = new User(email, password, phoneNum);
+                                                User user = new User(email, password, phoneNum, secureCodes);
 
-                                                FirebaseDatabase.getInstance().getReference("Users")
-                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                reff.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -180,6 +188,16 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                         }
                                 }
                         });
+        }
+
+        public static String getRandomNumberString() {
+                // It will generate 6 digit random Number.
+                // from 0 to 999999
+                Random rnd = new Random();
+                int number = rnd.nextInt(999999);
+
+                // this will convert any number sequence into 6 character.
+                return String.format("%06d", number);
         }
 
         private void verifyGoogleReCAPTCHA() {
