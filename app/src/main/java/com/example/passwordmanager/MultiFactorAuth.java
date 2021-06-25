@@ -7,25 +7,35 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class MultiFactorAuth extends AppCompatActivity {
     Button verifyBtn;
-    EditText phoneNoEnteredByTheUser;
+    String inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
+    String Code = "";
     private String verifySys;
+    String userId;
+    DatabaseReference reff;
     Boolean checked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +43,35 @@ public class MultiFactorAuth extends AppCompatActivity {
         setContentView(R.layout.verify);
 
         verifyBtn = findViewById(R.id.buttonotp);
-        phoneNoEnteredByTheUser = findViewById((R.id.otpcode));
+
         Intent intent = getIntent();
         String num = intent.getStringExtra("phoneNum");
         checked = intent.getBooleanExtra("checked", false);
+        userId = intent.getStringExtra("userId");
         Log.d("phone num", num);
+        reff = FirebaseDatabase.getInstance().getReference();
+        initializeCode();
         //String num = "+601136055713";
 
         sendVerificationCodeToUser(num);
-    }
 
+        verifyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               checkUserCode(Code);
+            }
+        });
+    }
+    private void initializeCode(){
+        inputCode1 = findViewById(R.id.inputCode1).toString();
+        inputCode2 = findViewById(R.id.inputCode2).toString();;
+        inputCode3 = findViewById(R.id.inputCode3).toString();;
+        inputCode4 = findViewById(R.id.inputCode4).toString();;
+        inputCode5 = findViewById(R.id.inputCode5).toString();;
+        inputCode6 = findViewById(R.id.inputCode6).toString();;
+
+        Code += inputCode1 + inputCode2 + inputCode3 + inputCode4 + inputCode5 + inputCode6;
+    }
     private void sendVerificationCodeToUser(String num) {
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
                 .setActivity(this)
@@ -112,4 +141,32 @@ public class MultiFactorAuth extends AppCompatActivity {
                     }
                 });
     }
+
+    private void checkUserCode(String Code){
+        final boolean checked = false;
+        reff.child("Users").child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    GenericTypeIndicator<ArrayList<String>> codes = new GenericTypeIndicator<ArrayList<String>>() {};
+                    ArrayList<String> secureCodes = task.getResult().getValue(codes);
+                    if(secureCodes.contains(Code)){
+                        Intent intent = new Intent(getApplicationContext(), Profile.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                    else{
+                        Snackbar.make(findViewById(R.id.mflayout), "Please enter your correct secure code", Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
+
+                }
+            }
+        });
+
+    }
+
 }

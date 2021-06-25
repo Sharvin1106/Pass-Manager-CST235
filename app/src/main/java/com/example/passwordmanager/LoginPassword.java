@@ -206,6 +206,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                     Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
                                     intent.putExtra("phoneNum", phone);
                                     intent.putExtra("checked", checked);
+                                    intent.putExtra("userId", user.getUid());
                                     startActivity(intent);
                                 }
                             }
