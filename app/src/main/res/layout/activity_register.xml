@@ -11,20 +11,19 @@
         android:id="@+id/texttitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/proximanovabold"
         android:text="Secure your passwords now"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="23sp"
         android:textStyle="bold"
-        android:fontFamily="@font/proximanovabold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.169" />
+        app:layout_constraintVertical_bias="0.062" />
 
     <Button
         android:id="@+id/Registerbtn"
@@ -33,10 +32,9 @@
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.865" />
+        app:layout_constraintVertical_bias="0.812" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -49,7 +47,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.935"
+        app:layout_constraintVertical_bias="0.903"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -60,8 +58,8 @@
         android:text="Set up an account to store your passwords"
         android:textColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/texttitle"
+        app:layout_constraintStart_toStartOf="@+id/texttitle"
         app:layout_constraintTop_toBottomOf="@+id/texttitle"
         app:layout_constraintVertical_bias="0.04" />
 
@@ -71,11 +69,11 @@
         android:layout_width="342dp"
         android:layout_height="62dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/texttitle"
+        app:layout_constraintHorizontal_bias="0.608"
+        app:layout_constraintStart_toStartOf="@+id/texttitle"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.36">
+        app:layout_constraintVertical_bias="0.191">
 
 
         <com.google.android.material.textfield.TextInputEditText
@@ -86,23 +84,46 @@
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/outlinedTextField1"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="259dp"
-        android:layout_height="60dp"
+        android:layout_width="336dp"
+        android:layout_height="61dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.775"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/outlinedTextField"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField"
-        app:layout_constraintVertical_bias="0.051">
+        app:layout_constraintVertical_bias="0.027">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phone"
-            android:layout_width="246dp"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
             android:hint="Phone Number"
+            android:inputType="phone" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField11"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="335dp"
+        android:layout_height="65dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField1"
+        app:layout_constraintHorizontal_bias="0.471"
+        app:layout_constraintStart_toStartOf="@+id/outlinedTextField1"
+        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField"
+        app:layout_constraintVertical_bias="0.172">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pin"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="PIN Number"
             android:inputType="phone" />
 
 
@@ -115,11 +136,11 @@
         android:layout_height="73dp"
         app:endIconMode="password_toggle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/outlinedTextField"
+        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField11"
+        app:layout_constraintHorizontal_bias="0.59"
+        app:layout_constraintStart_toStartOf="@+id/outlinedTextField11"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField1"
-        app:layout_constraintVertical_bias="0.024">
+        app:layout_constraintVertical_bias="0.215">
 
 
         <com.google.android.material.textfield.TextInputEditText
@@ -164,7 +185,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.978" />
+        app:layout_constraintVertical_bias="0.955" />
 
     <TextView
         android:id="@+id/loginBtn"
@@ -175,10 +196,10 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.978" />
+        app:layout_constraintVertical_bias="0.953" />
 
     <CheckBox
         android:id="@+id/captchaReg"
@@ -190,10 +211,10 @@
         android:textColor="@color/gray"
         app:layout_constraintBottom_toTopOf="@+id/Registerbtn"
         app:layout_constraintEnd_toEndOf="@+id/outlinedTextField3"
+        app:layout_constraintHorizontal_bias="0.46"
         app:layout_constraintStart_toStartOf="@+id/outlinedTextField3"
-        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3"
+        app:layout_constraintVertical_bias="0.4" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
