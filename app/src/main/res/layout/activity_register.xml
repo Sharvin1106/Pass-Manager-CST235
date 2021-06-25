@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/paleblack"
-    tools:context=".Register"
-    tools:ignore="MissingClass">
+    tools:context=".Register">
 
     <TextView
         android:id="@+id/texttitle"
@@ -193,10 +192,6 @@
         app:layout_constraintEnd_toEndOf="@+id/outlinedTextField3"
         app:layout_constraintStart_toStartOf="@+id/outlinedTextField3"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3" />
-
-
-
-
 
 
 
