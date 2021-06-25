@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
@@ -69,6 +70,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     User user1;
     String phone;
     String email;
+    Boolean checked;
     ArrayList<User> userList;
 
     @Override
@@ -89,6 +91,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
+        checked = intent.getBooleanExtra("checked", false);
         mAuth = FirebaseAuth.getInstance();
         queue = Volley.newRequestQueue(getApplicationContext());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
@@ -139,10 +142,14 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(LoginPassword.this, "Email sent", Toast.LENGTH_SHORT).show();
+                                                Snackbar.make(findViewById(R.id.lplayout), "Password reset email has been sent", Snackbar.LENGTH_SHORT)
+                                                        .show();
+                                                Intent intent = new Intent(LoginPassword.this, MainActivity.class);
+                                                startActivity(intent);
                                             }
                                             else{
-                                                Toast.makeText(LoginPassword.this, "Password reset email sent failed", Toast.LENGTH_SHORT).show();
+                                                Snackbar.make(findViewById(R.id.lplayout), "Fail to send password reset email", Snackbar.LENGTH_SHORT)
+                                                        .show();
                                             }
                                         }
                                     });
@@ -196,10 +203,10 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                 }
                                 else {
                                     phone = String.valueOf(task.getResult().child("phone").getValue());
-                                    Log.d("phone", phone);
                                     Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
                                     intent.putExtra("phoneNum", phone);
-                                     startActivity(intent);
+                                    intent.putExtra("checked", checked);
+                                    startActivity(intent);
                                 }
                             }
                         });

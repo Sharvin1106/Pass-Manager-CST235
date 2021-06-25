@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -25,15 +26,17 @@ public class MultiFactorAuth extends AppCompatActivity {
     Button verifyBtn;
     EditText phoneNoEnteredByTheUser;
     private String verifySys;
+    Boolean checked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multi_factor_auth);
+        setContentView(R.layout.verify);
 
         verifyBtn = findViewById(R.id.buttonotp);
         phoneNoEnteredByTheUser = findViewById((R.id.otpcode));
         Intent intent = getIntent();
         String num = intent.getStringExtra("phoneNum");
+        checked = intent.getBooleanExtra("checked", false);
         Log.d("phone num", num);
         //String num = "+601136055713";
 
@@ -85,6 +88,20 @@ public class MultiFactorAuth extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            if(checked){
+                                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("remember","true");
+                                editor.apply();
+                                Toast.makeText(MultiFactorAuth.this,"Checked",Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("remember","false");
+                                editor.apply();
+                                Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
+                            }
                             Intent intent = new Intent(getApplicationContext(), Profile.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
