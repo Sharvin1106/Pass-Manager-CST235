@@ -129,7 +129,7 @@ public class AccountList extends AppCompatActivity {
 
         aa.ocl(new View.OnClickListener(){
 
-            @RequiresApi(api = Build.VERSION_CODES.O)
+            //@RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 position = rv.getChildAdapterPosition(v);
@@ -140,7 +140,7 @@ public class AccountList extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public void strDialog(int pn, int x)
     {
 

@@ -1,12 +1,14 @@
 package com.example.passwordmanager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.chaos.view.PinView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,12 +38,15 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import static android.content.ContentValues.TAG;
+
 
 public class PasscodeView extends AppCompatActivity {
 
     Button next;
     DatabaseReference dr;
-    List<PinCode> fetchdata;
+    List<User> fetchdata;
+    String pinCode;
     ImageView back;
 
     private static final String key = "aesEncryptionKey";
@@ -94,24 +101,36 @@ public class PasscodeView extends AppCompatActivity {
         pinView.setPasswordHidden(false);
         pinView.setTransformationMethod(new PasswordTransformationMethod());
 
-        fetchdata = new ArrayList<PinCode>();
+        fetchdata = new ArrayList<User>();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        dr = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("PinCode");
-
-        dr.addValueEventListener(new ValueEventListener() {
+        dr = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+        Log.d("USER ID", user.getUid());
+        dr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    PinCode code=dataSnapshot.getValue(PinCode.class);
-                    fetchdata.add(code);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+
+                }
+                else {
+                    pinCode = String.valueOf(task.getResult().child("pincode").getValue());
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
         });
+//        dr.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+//                    User user=dataSnapshot.getValue(User.class);
+//                    fetchdata.add(user);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//            }
+//        });
 
         back=findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -129,8 +148,8 @@ public class PasscodeView extends AppCompatActivity {
                 Integer decrypt_pin;
                 Integer pin= Integer.valueOf(String.valueOf(pinView.getEditableText()));
 
-                String realpin= fetchdata.get(0).getPinCode();
-                decrypt_pin= Integer.valueOf(decrypt(realpin));
+                //String realpin= fetchdata.get(0).getPincode();
+                decrypt_pin= Integer.valueOf(decrypt(pinCode));
 
                 if(pin.equals(decrypt_pin))
                 {
