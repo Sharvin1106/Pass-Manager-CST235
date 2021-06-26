@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,12 +70,14 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     private int failedAttempts = 0;
     RequestQueue queue;
     boolean captchaChk;
+
     DatabaseReference reff , event;
     User user1;
     String phone, time , events ;
+
     String email;
     Boolean checked;
-    ArrayList<User> userList;
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +94,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         captchaChk = false;
-
+        sharedpreferences = getSharedPreferences("Users", MODE_PRIVATE);
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
         checked = intent.getBooleanExtra("checked", false);
@@ -221,6 +225,9 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                     sendEvent(email,"Unsuccessfull in retriving the data");
                                 }
                                 else {
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString("userId", user.getUid());
+                                    editor.apply();
                                     phone = String.valueOf(task.getResult().child("phone").getValue());
 //                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
                                     Intent intent = new Intent (LoginPassword.this,Profile.class);
@@ -229,8 +236,13 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                     intent.putExtra("checked", checked);
                                     intent.putExtra("userId", user.getUid());
                                     startActivity(intent);
+
                                     event = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
                                     insertEventData(currentTime(),"Logged in successfully");
+
+//                                    Intent intent = new Intent(LoginPassword.this, Profile.class);
+//                                    startActivity(intent);
+
                                 }
                             }
                         });

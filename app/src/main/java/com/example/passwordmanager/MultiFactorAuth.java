@@ -94,8 +94,26 @@ public class MultiFactorAuth extends AppCompatActivity {
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
             if(code!=null){
-                verifyCode(code);
+                //verifyCode(code);
+                if(checked){
+                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember","true");
+                    editor.apply();
+                    Toast.makeText(MultiFactorAuth.this,"Checked",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember","false");
+                    editor.apply();
+                    Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
+                }
+                Intent intent = new Intent(getApplicationContext(), Profile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
+
         }
 
         @Override
@@ -104,43 +122,43 @@ public class MultiFactorAuth extends AppCompatActivity {
         }
     };
 
-    private void verifyCode(String vCode){
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verifySys, vCode);
-        signInTheUserByCredentials(credential);
-    }
-
-    private void signInTheUserByCredentials(PhoneAuthCredential credential) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            if(checked){
-                                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("remember","true");
-                                editor.apply();
-                                Toast.makeText(MultiFactorAuth.this,"Checked",Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("remember","false");
-                                editor.apply();
-                                Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
-                            }
-                            Intent intent = new Intent(getApplicationContext(), Profile.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                        else{
-                            Toast.makeText(MultiFactorAuth.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
+//    private void verifyCode(String vCode){
+//        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verifySys, vCode);
+//        signInTheUserByCredentials(credential);
+//    }
+//
+//    private void signInTheUserByCredentials(PhoneAuthCredential credential) {
+//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//
+//        firebaseAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if(task.isSuccessful()){
+//                            if(checked){
+//                                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+//                                SharedPreferences.Editor editor = preferences.edit();
+//                                editor.putString("remember","true");
+//                                editor.apply();
+//                                Toast.makeText(MultiFactorAuth.this,"Checked",Toast.LENGTH_SHORT).show();
+//                            }
+//                            else{
+//                                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+//                                SharedPreferences.Editor editor = preferences.edit();
+//                                editor.putString("remember","false");
+//                                editor.apply();
+//                                Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
+//                            }
+//                            Intent intent = new Intent(getApplicationContext(), Profile.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
+//                        }
+//                        else{
+//                            Toast.makeText(MultiFactorAuth.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//    }
 
     private void checkUserCode(String Code){
         final boolean checked = false;
