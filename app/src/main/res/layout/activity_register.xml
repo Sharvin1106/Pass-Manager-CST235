@@ -88,18 +88,18 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/outlinedTextField1"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="336dp"
-        android:layout_height="61dp"
+        android:layout_width="240dp"
+        android:layout_height="63dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="@+id/outlinedTextField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.781"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField"
-        app:layout_constraintVertical_bias="0.027">
+        app:layout_constraintVertical_bias="0.022">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phone"
-            android:layout_width="match_parent"
+            android:layout_width="230dp"
             android:layout_height="52dp"
             android:hint="Phone Number"
             android:inputType="phone" />
@@ -113,9 +113,9 @@
         android:layout_width="335dp"
         android:layout_height="65dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField1"
+        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField"
         app:layout_constraintHorizontal_bias="0.471"
-        app:layout_constraintStart_toStartOf="@+id/outlinedTextField1"
+        app:layout_constraintStart_toStartOf="@+id/outlinedTextField"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField"
         app:layout_constraintVertical_bias="0.172">
 
@@ -215,6 +215,22 @@
         app:layout_constraintStart_toStartOf="@+id/outlinedTextField3"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3"
         app:layout_constraintVertical_bias="0.4" />
+
+    <com.hbb20.CountryCodePicker
+        android:id="@+id/countrypick"
+        android:layout_width="56dp"
+        android:layout_height="40dp"
+        app:ccp_autoDetectCountry="true"
+        app:ccp_showFlag="true"
+        app:ccp_showFullName="true"
+        app:ccp_showNameCode="true"
+        app:layout_constraintBottom_toTopOf="@+id/outlinedTextField11"
+        app:layout_constraintEnd_toStartOf="@+id/outlinedTextField1"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="@+id/outlinedTextField"
+        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField"
+        app:layout_constraintVertical_bias="0.522"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

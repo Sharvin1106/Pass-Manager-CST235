@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hbb20.CountryCodePicker;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,6 +56,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         private TextView title , register;
         private EditText editEmail,phone, pass, cpass;
+        private CountryCodePicker country_code;
         private ProgressBar progressBar;
         private CheckBox chkbox;
         private boolean captchaChk;
@@ -83,6 +85,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 phone= (EditText)findViewById(R.id.phone);
                 pass= (EditText)findViewById(R.id.password);
                 cpass= (EditText)findViewById(R.id.cpassword);
+                country_code = (CountryCodePicker)findViewById(R.id.countrypick);
                 progressBar= (ProgressBar)findViewById(R.id.progressBar);
 
                 mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -127,10 +130,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         }
 
         private void Registerbtn() {
+                String phoneNum;
                 Pattern number = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
                 Pattern special = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
                 String email = editEmail.getText().toString().trim();
-                String phoneNum = phone.getText().toString().trim();
+                String basephone = phone.getText().toString().trim();
+                String c_code = country_code.getSelectedCountryCode().toString().trim();
+                phoneNum = "+" + c_code + basephone ;
                 String password = pass.getText().toString().trim();
                 Matcher matcherNumber = number.matcher(password);
                 Matcher matcher = special.matcher(password);
