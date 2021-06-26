@@ -43,14 +43,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,9 +68,9 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     private int failedAttempts = 0;
     RequestQueue queue;
     boolean captchaChk;
-    DatabaseReference reff;
+    DatabaseReference reff , event;
     User user1;
-    String phone;
+    String phone, time , events ;
     String email;
     Boolean checked;
     ArrayList<User> userList;
@@ -101,13 +101,17 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
 
         reff = FirebaseDatabase.getInstance().getReference();
+  //      event = FirebaseDatabase.getInstance().getReference().child("Users");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+//        Date currentTime = Calendar.getInstance().getTime();
 
 
         FirebaseApp.initializeApp(/*context=*/ this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
                 SafetyNetAppCheckProviderFactory.getInstance());
+
+
     }
 
     public void sendEvent(String login , String content){
@@ -218,11 +222,15 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                 }
                                 else {
                                     phone = String.valueOf(task.getResult().child("phone").getValue());
-                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
+//                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
+                                    Intent intent = new Intent (LoginPassword.this,Profile.class);
+//                                    Intent intent = new Intent (LoginPassword.this,EventTabs.class);
                                     intent.putExtra("phoneNum", phone);
                                     intent.putExtra("checked", checked);
                                     intent.putExtra("userId", user.getUid());
                                     startActivity(intent);
+                                    event = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                                    insertEventData(currentTime(),"Logged in successfully");
                                 }
                             }
                         });
@@ -352,5 +360,22 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // at last we are adding our request to queue.
         queue.add(request);
+    }
+
+    private void insertEventData(String timenow , String content){
+        String time = timenow.toString();
+        String events = content.toString();
+
+        EventAdd eventAdd = new EventAdd(time,events);
+
+        event.push().setValue(eventAdd);
+        Toast.makeText(LoginPassword.this,"The Event is added",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public String currentTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+        String currentDateandTime = sdf.format(new Date());
+        return currentDateandTime;
     }
 }

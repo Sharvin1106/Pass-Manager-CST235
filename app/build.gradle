@@ -48,6 +48,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-safetynet:17.0.1'
 
     implementation 'com.google.firebase:firebase-analytics'
-
+    implementation 'com.hbb20:ccp:2.5.3'
 
 }
