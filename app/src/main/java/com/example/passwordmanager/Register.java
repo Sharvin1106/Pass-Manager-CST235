@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
         private TextView login , register;
-        private EditText editEmail,phone, pass, cpass;
+        private EditText editEmail,phone, pass, cpass, pin;
         private CountryCodePicker country_code;
         private ProgressBar progressBar;
         private CheckBox chkbox;
@@ -86,6 +86,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 phone= (EditText)findViewById(R.id.phone);
                 pass= (EditText)findViewById(R.id.password);
                 cpass= (EditText)findViewById(R.id.cpassword);
+                pin = (EditText)findViewById(R.id.pin);
                 country_code = (CountryCodePicker)findViewById(R.id.countrypick);
                 progressBar= (ProgressBar)findViewById(R.id.progressBar);
 
@@ -139,6 +140,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 String c_code = country_code.getSelectedCountryCode().toString().trim();
                 phoneNum = "+" + c_code + basephone ;
                 String password = pass.getText().toString().trim();
+                String pinCode = pin.getText().toString().trim();
                 Matcher matcherNumber = number.matcher(password);
                 Matcher matcher = special.matcher(password);
                 ArrayList<String> secureCodes = new ArrayList<>();
@@ -179,7 +181,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                                                 if (task.isSuccessful()) {
-                                                        User user = new User(email, password, phoneNum, secureCodes);
+                                                        User user = new User(email, password, phoneNum, secureCodes,pinCode);
 
                                                         reff.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -230,7 +230,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                     editor.apply();
                                     phone = String.valueOf(task.getResult().child("phone").getValue());
 //                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
-                                    Intent intent = new Intent (LoginPassword.this,Profile.class);
+                                    Intent intent = new Intent (LoginPassword.this,Encrypt.class);
 //                                    Intent intent = new Intent (LoginPassword.this,EventTabs.class);
 //                                    intent.putExtra("phoneNum", phone);
 //                                    intent.putExtra("checked", checked);
