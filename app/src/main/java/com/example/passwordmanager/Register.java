@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +55,7 @@ import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
-        private TextView title , register;
+        private TextView login , register;
         private EditText editEmail,phone, pass, cpass;
         private CountryCodePicker country_code;
         private ProgressBar progressBar;
@@ -73,8 +74,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                 mAuth = FirebaseAuth.getInstance();
 
-                title= (TextView) findViewById(R.id.texttitle);
-                title.setOnClickListener(this);
+                login= (TextView) findViewById(R.id.loginBtnReg);
+                login.setOnClickListener(this);
 
                 register = (Button) findViewById(R.id.Registerbtn);
                 register.setOnClickListener(this);
@@ -108,7 +109,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         @Override
         public void onClick(View v) {
                 switch (v.getId()){
-                        case R.id.texttitle:
+                        case R.id.loginBtnReg:
                                 startActivity(new Intent(this,MainActivity.class));
                                 break;
                         case R.id.Registerbtn:
@@ -171,44 +172,50 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
+                if(captchaChk) {
+                        mAuth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                        if (task.isSuccessful()) {
-                                                User user = new User(email, password, phoneNum, secureCodes);
+                                                if (task.isSuccessful()) {
+                                                        User user = new User(email, password, phoneNum, secureCodes);
 
-                                                reff.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                                                user.sendEmailVerification();
-                                                                Toast.makeText(Register.this, "Check Your Email for Verification", Toast.LENGTH_LONG).show();
-                                                                if(user.isEmailVerified()){
-                                                                        if(task.isSuccessful()){
-                                                                                Toast.makeText(Register.this,"User has been registered successfully !",Toast.LENGTH_LONG).show();
-                                                                                progressBar.setVisibility(View.VISIBLE);
-                                                                                sendEvent(email,"user has just registered");
-                                                                                //redirect to login layout
-                                                                        }
-                                                                        else {
-                                                                                Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
-                                                                                progressBar.setVisibility(View.GONE);
-                                                                                sendEvent(email, "user is failed to be registered");
+                                                        reff.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                                        user.sendEmailVerification();
+                                                                        Snackbar.make(findViewById(R.id.regLayout), "Check your email for verification", Snackbar.LENGTH_SHORT)
+                                                                                .show();
+                                                                        if (user.isEmailVerified()) {
+                                                                                if (task.isSuccessful()) {
+                                                                                        Toast.makeText(Register.this, "User has been registered successfully !", Toast.LENGTH_LONG).show();
+                                                                                        progressBar.setVisibility(View.VISIBLE);
+                                                                                        sendEvent(email, "user has just registered");
+                                                                                        //redirect to login layout
+                                                                                } else {
+                                                                                        Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
+                                                                                        progressBar.setVisibility(View.GONE);
+                                                                                        sendEvent(email, "user is failed to be registered");
+                                                                                }
                                                                         }
                                                                 }
-                                                        }
-                                                });
+                                                        });
 
 
-                                        } else {
-                                                Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
-                                                progressBar.setVisibility(View.GONE);
+                                                } else {
+                                                        Snackbar.make(findViewById(R.id.regLayout), "Failed to register", Snackbar.LENGTH_SHORT)
+                                                                .show();
+                                                        progressBar.setVisibility(View.GONE);
+                                                }
                                         }
-                                }
-                        });
+                                });
+                }
+                else{
+
+                }
         }
 
         public static String getRandomNumberString() {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,7 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Preference extends AppCompatActivity {
-    LinearLayout shwCode, updPass, updPin, showLog;
+    LinearLayout shwCode, updPass, updPin, showLog, backup;
+    ImageView backBtn;
     String userID;
     boolean updPassCheck;
     EditText oldPass, newPass;
@@ -44,6 +46,8 @@ public class Preference extends AppCompatActivity {
     private Executor executor;
     private static BiometricPrompt biometricPrompt;
     private static BiometricPrompt.PromptInfo promptInfo;
+    Pattern number;
+    Pattern special;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,11 @@ public class Preference extends AppCompatActivity {
         updPass = findViewById(R.id.updpass);
         updPin = findViewById(R.id.updPin);
         showLog = findViewById(R.id.logs);
+        backBtn = findViewById(R.id.backBtn);
+        backup = findViewById(R.id.backup);
         reff = FirebaseDatabase.getInstance().getReference();
-
+        number = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
+        special = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
         updPassCheck = false;
         shwCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +75,18 @@ public class Preference extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 changePass();
+            }
+        });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Preference.this, Profile.class));
+            }
+        });
+        updPin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePin();
             }
         });
 
@@ -136,6 +155,23 @@ public class Preference extends AppCompatActivity {
     }
 
     private void changePass(){
+
+        reff.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+
+                    oldPassword= task.getResult().child("password").getValue().toString();
+                    Log.d("Password old", oldPassword);
+                }
+            }
+        });
+
+
+
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(Preference.this);
         builder.setTitle("Change Password");
         final View updPassLayout = getLayoutInflater().inflate(R.layout.alert_updpass_bg, null);
@@ -146,10 +182,52 @@ public class Preference extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 oldPass = updPassLayout.findViewById(R.id.oldPass);
                 newPass = updPassLayout.findViewById(R.id.newPass);
-                if(validatePassword()){
-                    updPassCheck = true;
-                    openBiometricAuth();
+                Matcher matcherNumber = number.matcher(newPass.getText().toString().trim());
+                Matcher matcher = special.matcher(newPass.getText().toString().trim());
+                if (oldPass.getText().toString().trim().isEmpty()) {
+                    oldPass.setError("Password is required");
+                    oldPass.requestFocus();
+                    Snackbar.make(findViewById(R.id.playout), "Old Password is required", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
                 }
+                if(!oldPass.getText().toString().trim().equals(oldPassword)){
+                    oldPass.setError("Old password not match");
+                    oldPass.requestFocus();
+                    Snackbar.make(findViewById(R.id.playout), "Old Password does not match", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+                if (newPass.getText().toString().trim().isEmpty()) {
+                    newPass.setError("Password is required");
+                    newPass.requestFocus();
+                    Snackbar.make(findViewById(R.id.playout), "New Password is required", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+                if (newPass.getText().toString().trim().length() < 8) {
+                    newPass.setError("Min password length is 8");
+                    newPass.requestFocus();
+                    Snackbar.make(findViewById(R.id.playout), "Min password length is 8", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+                if (!matcherNumber.find()) {
+                    newPass.setError("Password must be alphanumeric");
+                    newPass.requestFocus();
+                    Snackbar.make(findViewById(R.id.playout), "Password must be alphanumeric", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+                if (!matcher.find()) {
+                    newPass.setError("Password must contains at least a special character");
+                    newPass.requestFocus();
+                    Snackbar.make(findViewById(R.id.playout), "Password must contains at least a special character", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+                    openBiometricAuth();
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -165,57 +243,33 @@ public class Preference extends AppCompatActivity {
         biometricPrompt.authenticate(promptInfo);
     }
 
-    private boolean validatePassword(){
-        Pattern number = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
-        Pattern special = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
-        Matcher matcherNumber = number.matcher(newPass.getText().toString().trim());
-        Matcher matcher = special.matcher(newPass.getText().toString().trim());
-        reff.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
 
-                    oldPassword= task.getResult().child("password").getValue().toString();
-                    Log.d("Password old", oldPassword);
-                }
+    private void changePin(){
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(Preference.this);
+        builder.setTitle("Change Password");
+        final View updPassLayout = getLayoutInflater().inflate(R.layout.alert_updpass_bg, null);
+        builder.setView(updPassLayout);
+        builder.setBackground(getResources().getDrawable(R.drawable.alert_dialog_bg, null));
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                oldPass = updPassLayout.findViewById(R.id.oldPass);
+                newPass = updPassLayout.findViewById(R.id.newPass);
+//                if(validatePassword()){
+//                    updPassCheck = true;
+//                    openBiometricAuth();
+//                }
             }
         });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
 
-        if (oldPass.getText().toString().trim().isEmpty()) {
-            oldPass.setError("Password is required");
-            oldPass.requestFocus();
-            return false;
-        }
-        if(!oldPass.getText().toString().trim().equals(oldPassword)){
-            oldPass.setError("Old password not match");
-            oldPass.requestFocus();
-        }
-        if (newPass.getText().toString().trim().isEmpty()) {
-            newPass.setError("Password is required");
-            newPass.requestFocus();
-            return false;
-        }
-        if (newPass.getText().toString().trim().length() < 8) {
-            newPass.setError("Min password length is 8");
-            newPass.requestFocus();
-            return false;
-        }
-        if (!matcherNumber.find()) {
-            newPass.setError("Password must be alphanumeric");
-            newPass.requestFocus();
-            return false;
-        }
-        if (!matcher.find()) {
-            newPass.setError("Password must contains at least a special character");
-            newPass.requestFocus();
-            return false;
-        }
-        return true;
     }
-
     private void updatePassword(){
         FirebaseAuth.getInstance().getCurrentUser().updatePassword(newPass.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -223,7 +277,7 @@ public class Preference extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Snackbar.make(findViewById(R.id.playout), "Password has been reset", Snackbar.LENGTH_SHORT)
                             .show();
-                    reff.child("User").child(userID).child("password").setValue(newPass.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    reff.child("Users").child(userID).child("password").setValue(newPass.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(!task.isSuccessful()){
