@@ -13,6 +13,7 @@
         <activity android:name=".LoginPassword"></activity>
         <activity android:name=".Register" />
         <activity android:name=".Profile" />
+        <activity android:name=".EventTabs" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
