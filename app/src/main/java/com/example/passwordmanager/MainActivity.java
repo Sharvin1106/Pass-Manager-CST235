@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,12 +29,14 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private TextView event;
     private TextView register;
     private EditText editTextEmail, editTextPassword;
     private Button loginbtn;
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Executor executor;
     private static BiometricPrompt biometricPrompt;
     private static BiometricPrompt.PromptInfo promptInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         register = (TextView) findViewById(R.id.registerlink);
         register.setOnClickListener(this);
+
+        event = (TextView) findViewById(R.id.event_test);
+        event.setOnClickListener(this);
 
         loginbtn = (Button) findViewById(R.id.loginbtn);
         loginbtn.setOnClickListener(this);
@@ -183,14 +191,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.registerlink:
-                startActivity(new Intent(this,Register.class));
-                break;
+  //          case R.id.registerlink:
+ //               startActivity(new Intent(this,Register.class));
+  //              break;
             case R.id.loginbtn:
                 userLogin();
                 break;
-
-
+            case R.id.event_test:
+                startActivity(new Intent(this,EventTabs.class));
+                break;
         }
     }
 
