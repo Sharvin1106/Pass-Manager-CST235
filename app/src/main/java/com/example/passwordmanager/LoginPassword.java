@@ -38,6 +38,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
@@ -64,6 +65,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     private final String SiteKey = "6LfmB0obAAAAANrWiaf3BBGjZiKFjdNBPpBhaLmc";
     private final String SecretKey = "6LfmB0obAAAAAAR49kgBz0h0FFFFF7wZqW4kAlqC";
     private FirebaseAuth mAuth;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private ProgressBar progressBar;
     private int failedAttempts = 0;
     RequestQueue queue;
@@ -100,6 +102,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
 
         reff = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 
         FirebaseApp.initializeApp(/*context=*/ this);
@@ -108,6 +111,13 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                 SafetyNetAppCheckProviderFactory.getInstance());
     }
 
+    public void sendEvent(String login , String content){
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, login);
+        //       bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, content);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    }
 
 
     @SuppressLint("NonConstantResourceId")
@@ -138,6 +148,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onClick(View v) {
                         if(captchaChk) {
+                            sendEvent(email,"Password reset is sent to the mail ");
                             mAuth.sendPasswordResetEmail(email)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -147,10 +158,12 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                                         .show();
                                                 Intent intent = new Intent(LoginPassword.this, MainActivity.class);
                                                 startActivity(intent);
+                                                sendEvent(email,"Password has been successfully reset ");
                                             }
                                             else{
                                                 Snackbar.make(findViewById(R.id.lplayout), "Fail to send password reset email", Snackbar.LENGTH_SHORT)
                                                         .show();
+                                                sendEvent(email,"Failed to reset password ");
                                             }
                                         }
                                     });
@@ -194,6 +207,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    sendEvent(email,"successfully log in ");
 
                     if(user.isEmailVerified()){
                         reff.child("Users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -201,6 +215,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 if (!task.isSuccessful()) {
                                     Log.e("firebase", "Error getting data", task.getException());
+                                    sendEvent(email,"Unsuccessfull in retriving the data");
                                 }
                                 else {
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -221,6 +236,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                     else{
                         user.sendEmailVerification();
                         Toast.makeText(LoginPassword.this, "Check Your Email for Verification", Toast.LENGTH_LONG).show();
+                        sendEvent(email,"Email verification is sent");
                     }
 
                 }
@@ -228,6 +244,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                     if(failedAttempts == 3){
                         Toast.makeText(LoginPassword.this,"You have reached the maximum login limit. Please check your email",Toast.LENGTH_LONG).show();
                         startActivity(new Intent(LoginPassword.this,MainActivity.class));
+                        sendEvent(email,"Invalid login attempt");
                     }
                     else {
                         Toast.makeText(LoginPassword.this, "Failed to login !Please check your credentials", Toast.LENGTH_LONG).show();

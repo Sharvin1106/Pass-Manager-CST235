@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,6 +59,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         private CheckBox chkbox;
         private boolean captchaChk;
         private FirebaseAuth mAuth;
+        private FirebaseAnalytics mFirebaseAnalytics;
         RequestQueue queue;
         private String SiteKey = "6LfmB0obAAAAANrWiaf3BBGjZiKFjdNBPpBhaLmc";
         private final String SecretKey = "6LfmB0obAAAAAAR49kgBz0h0FFFFF7wZqW4kAlqC";
@@ -82,12 +84,23 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 pass= (EditText)findViewById(R.id.password);
                 cpass= (EditText)findViewById(R.id.cpassword);
                 progressBar= (ProgressBar)findViewById(R.id.progressBar);
+
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
                 reff = FirebaseDatabase.getInstance().getReference("Users");
                 queue = Volley.newRequestQueue(getApplicationContext());
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                         WindowManager.LayoutParams.FLAG_SECURE);
 
         }
+
+        public void sendEvent(String login , String content){
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, login);
+                //       bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, content);
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        }
+
 
         @Override
         public void onClick(View v) {
@@ -171,11 +184,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                                                         if(task.isSuccessful()){
                                                                                 Toast.makeText(Register.this,"User has been registered successfully !",Toast.LENGTH_LONG).show();
                                                                                 progressBar.setVisibility(View.VISIBLE);
+                                                                                sendEvent(email,"user has just registered");
                                                                                 //redirect to login layout
                                                                         }
                                                                         else {
                                                                                 Toast.makeText(Register.this, "Failed to resgister! Try again !", Toast.LENGTH_LONG).show();
                                                                                 progressBar.setVisibility(View.GONE);
+                                                                                sendEvent(email, "user is failed to be registered");
                                                                         }
                                                                 }
                                                         }

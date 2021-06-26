@@ -3,4 +3,6 @@
     <color name='paleblack'>#222831</color>
     <color name='gray'>#878787</color>
     <color name='darkgrey'>#233958</color>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
