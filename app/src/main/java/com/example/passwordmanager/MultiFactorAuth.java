@@ -33,6 +33,7 @@ public class MultiFactorAuth extends AppCompatActivity {
     Button verifyBtn;
     String inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
     String Code = "";
+    String code;
     private String verifySys;
     String userId;
     DatabaseReference reff;
@@ -86,13 +87,14 @@ public class MultiFactorAuth extends AppCompatActivity {
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
-
+            Snackbar.make(findViewById(R.id.mflayout), "Verification Code Sent", Snackbar.LENGTH_SHORT)
+                    .show();
             verifySys = s;
         }
 
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-            String code = phoneAuthCredential.getSmsCode();
+            code = phoneAuthCredential.getSmsCode();
             if(code!=null){
                 //verifyCode(code);
                 if(checked){
@@ -172,6 +174,39 @@ public class MultiFactorAuth extends AppCompatActivity {
                     GenericTypeIndicator<ArrayList<String>> codes = new GenericTypeIndicator<ArrayList<String>>() {};
                     ArrayList<String> secureCodes = task.getResult().getValue(codes);
                     if(secureCodes.contains(Code)){
+                        if(checked){
+                            SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("remember","true");
+                            editor.apply();
+                            Toast.makeText(MultiFactorAuth.this,"Checked",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("remember","false");
+                            editor.apply();
+                            Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
+                        }
+                        Intent intent = new Intent(getApplicationContext(), Profile.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                    else if(code.equals(Code)){
+                        if(checked){
+                            SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("remember","true");
+                            editor.apply();
+                            Toast.makeText(MultiFactorAuth.this,"Checked",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("remember","false");
+                            editor.apply();
+                            Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
+                        }
                         Intent intent = new Intent(getApplicationContext(), Profile.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

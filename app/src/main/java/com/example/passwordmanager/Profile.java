@@ -65,8 +65,6 @@ public class Profile extends AppCompatActivity implements LogOutTimerUtil.LogOut
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(new Intent(Profile.this,
-                MainActivity.class));
         Log.e(TAG, "onPause()");
     }
 
@@ -85,8 +83,6 @@ public class Profile extends AppCompatActivity implements LogOutTimerUtil.LogOut
     @Override
     protected void onStop() {
         super.onStop();
-        stopService(new Intent(Profile.this, MainActivity.class));
-        finish();
     }
 
     /**

@@ -60,7 +60,7 @@
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:background="@color/paleblack">
+            android:background="@color/black">
 
             <EditText
                 android:id="@+id/inputCode1"
@@ -74,7 +74,8 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:background="@color/paleblack"/>
 
             <EditText
                 android:id="@+id/inputCode2"
@@ -89,7 +90,8 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:background="@color/paleblack"/>
 
             <EditText
                 android:id="@+id/inputCode3"
@@ -104,7 +106,8 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:background="@color/paleblack"/>
 
             <EditText
                 android:id="@+id/inputCode4"
@@ -119,7 +122,8 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:background="@color/paleblack"/>
 
             <EditText
                 android:id="@+id/inputCode5"
@@ -134,7 +138,8 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:background="@color/paleblack"/>
 
             <EditText
                 android:id="@+id/inputCode6"
@@ -149,7 +154,8 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:background="@color/paleblack"/>
         </LinearLayout>
 
         <LinearLayout
@@ -171,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Resend OTP"
+                android:text="Use Secure Codes"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -184,7 +190,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:text="VERIFY"
-            android:background="@drawable/gradient"
+            android:textColor="@color/black"
+            android:backgroundTint="#ffb7b7"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
