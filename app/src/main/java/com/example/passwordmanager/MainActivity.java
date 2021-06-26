@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent (MainActivity.this,Profile.class );
                 intent.putExtra("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
                 startActivity(intent);
+                finish();
 
             }
 
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         myIntent.putExtra("email", email);
                         myIntent.putExtra("checked", checked);
                         startActivity(myIntent);
+                        finish();
                     }
                 }
                 else{
