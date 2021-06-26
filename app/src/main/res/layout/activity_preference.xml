@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Preference"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:id="@+id/playout">
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,6 +35,7 @@
         app:layout_constraintVertical_bias="0.035" />
 
     <LinearLayout
+        android:id="@+id/securecode"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,6 +65,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/updpass"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:clickable="true"
@@ -94,6 +97,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/updPin"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:clickable="true"
@@ -125,6 +129,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/logs"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:clickable="true"
