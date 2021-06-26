@@ -50,6 +50,10 @@ dependencies {
     implementation 'com.hbb20:ccp:2.5.3'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.hbb20:ccp:2.5.3'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.opencsv:opencsv:4.6'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.chaos.view:pinview:1.4.4'
 
 
 }
