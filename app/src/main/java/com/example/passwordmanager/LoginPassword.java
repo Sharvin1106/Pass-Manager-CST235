@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,11 +69,10 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
     RequestQueue queue;
     boolean captchaChk;
     DatabaseReference reff;
-    User user1;
     String phone;
     String email;
     Boolean checked;
-    ArrayList<User> userList;
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         captchaChk = false;
-
+        sharedpreferences = getSharedPreferences("Users", MODE_PRIVATE);
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
         checked = intent.getBooleanExtra("checked", false);
@@ -202,12 +203,17 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                     Log.e("firebase", "Error getting data", task.getException());
                                 }
                                 else {
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString("userId", user.getUid());
+                                    editor.apply();
                                     phone = String.valueOf(task.getResult().child("phone").getValue());
                                     Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
                                     intent.putExtra("phoneNum", phone);
                                     intent.putExtra("checked", checked);
                                     intent.putExtra("userId", user.getUid());
                                     startActivity(intent);
+//                                    Intent intent = new Intent(LoginPassword.this, Profile.class);
+//                                    startActivity(intent);
                                 }
                             }
                         });

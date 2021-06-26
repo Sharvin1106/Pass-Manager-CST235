@@ -76,7 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 Intent intent = new Intent (MainActivity.this,Profile.class );
+                intent.putExtra("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
                 startActivity(intent);
+
             }
 
             @Override
