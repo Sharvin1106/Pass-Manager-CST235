@@ -11,6 +11,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="366dp"
         android:layout_height="65dp"
+        app:passwordToggleContentDescription="false"
+        app:endIconMode="password_toggle"
        >
 
 
@@ -28,6 +30,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="366dp"
         android:layout_height="65dp"
+        app:passwordToggleContentDescription="false"
+        app:endIconMode="password_toggle"
        >
 
 
