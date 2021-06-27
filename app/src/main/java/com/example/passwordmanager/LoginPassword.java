@@ -230,11 +230,11 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
                                     editor.apply();
                                     phone = String.valueOf(task.getResult().child("phone").getValue());
 //                                    Intent intent = new Intent(LoginPassword.this,MultiFactorAuth.class);
-                                    Intent intent = new Intent (LoginPassword.this,Encrypt.class);
-//                                    Intent intent = new Intent (LoginPassword.this,EventTabs.class);
-//                                    intent.putExtra("phoneNum", phone);
-//                                    intent.putExtra("checked", checked);
-//                                    intent.putExtra("userId", user.getUid());
+//                                    Intent intent = new Intent (LoginPassword.this,AccountList.class);
+                                    Intent intent = new Intent (LoginPassword.this,MultiFactorAuth.class);
+                                    intent.putExtra("phoneNum", phone);
+                                    intent.putExtra("checked", checked);
+                                    intent.putExtra("userId", user.getUid());
                                     startActivity(intent);
 
                                     event = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,7 +52,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AccountList extends AppCompatActivity {
+import static android.content.ContentValues.TAG;
+
+public class AccountList extends AppCompatActivity implements LogOutTimerUtil.LogOutListener, LifecycleObserver {
 
     private BottomSheetDialog bsd;
     private TextView e,u,p,n,a;
@@ -76,6 +80,43 @@ public class AccountList extends AppCompatActivity {
 
     private static final String key = "aesEncryptionKey";
     private static final String initVector = "encryptionIntVec";
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogOutTimerUtil.startLogoutTimer(this, this);
+        Log.e(TAG, "User interacting with screen");
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        LogOutTimerUtil.startLogoutTimer(this, this);
+        Log.e(TAG, "User interacting with screen");
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume()");
+    }
+
+    @Override
+    public void doLogout() {
+        Intent intent = new Intent(AccountList.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    /**
+     * Performing idle time logout
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +163,8 @@ public class AccountList extends AppCompatActivity {
 
             }
         });
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
 
     }
 
@@ -250,7 +293,7 @@ public class AccountList extends AppCompatActivity {
     protected void onPause()
     {
         super.onPause();
-        bsd.dismiss();
+        //bsd.dismiss();
     }
 
 

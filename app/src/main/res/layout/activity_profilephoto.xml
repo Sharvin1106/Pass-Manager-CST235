@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:onClick="send"
-            app:srcCompat="@drawable/instagramlogo" />
+            android:src="@drawable/instagramlogo" />
 
         <ImageView
             android:id="@+id/imageView12"
@@ -120,10 +120,10 @@
             android:id="@+id/imageView17"
             android:layout_width="80dp"
             android:layout_height="99dp"
-            android:layout_weight="1"
             android:layout_margin="10dp"
+            android:layout_weight="1"
             android:onClick="send8"
-            app:srcCompat="@drawable/shoppinglogo" />
+            android:src="@drawable/shopping" />
 
         <ImageView
             android:id="@+id/imageView18"
@@ -132,7 +132,7 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:onClick="send9"
-            app:srcCompat="@drawable/bookslogo" />
+            android:src="@drawable/book" />
 
 
     </LinearLayout>
@@ -150,7 +150,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:onClick="send10"
-            app:srcCompat="@drawable/game" />
+            android:src="@drawable/games" />
 
         <ImageView
             android:id="@+id/imageView20"
@@ -159,7 +159,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:onClick="send11"
-            app:srcCompat="@drawable/browser" />
+            android:src="@drawable/browsers" />
 
         <ImageView
             android:id="@+id/imageView21"
@@ -168,7 +168,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:onClick="send12"
-            app:srcCompat="@drawable/bankcard" />
+            android:src="@drawable/bankcards" />
 
 
     </LinearLayout>

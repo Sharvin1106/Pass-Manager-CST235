@@ -62,31 +62,31 @@ public class profilephoto extends AppCompatActivity {
 
     public void send8(View v) {
         Intent i = new Intent(profilephoto.this, Encrypt.class);
-        i.putExtra( "id" , R.drawable.shoppinglogo);
+        i.putExtra( "id" , R.drawable.shopping);
         startActivity(i);
     }
 
     public void send9(View v) {
         Intent i = new Intent(profilephoto.this, Encrypt.class);
-        i.putExtra( "id" , R.drawable.bookslogo);
+        i.putExtra( "id" , R.drawable.book);
         startActivity(i);
     }
 
     public void send10(View v) {
         Intent i = new Intent(profilephoto.this, Encrypt.class);
-        i.putExtra( "id" , R.drawable.game);
+        i.putExtra( "id" , R.drawable.games);
         startActivity(i);
     }
 
     public void send11(View v) {
         Intent i = new Intent(profilephoto.this, Encrypt.class);
-        i.putExtra( "id" , R.drawable.browser);
+        i.putExtra( "id" , R.drawable.browsers);
         startActivity(i);
     }
 
     public void send12(View v) {
         Intent i = new Intent(profilephoto.this, Encrypt.class);
-        i.putExtra( "id" , R.drawable.bankcard);
+        i.putExtra( "id" , R.drawable.bankcards);
         startActivity(i);
     }
 }
