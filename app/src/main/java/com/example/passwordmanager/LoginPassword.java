@@ -100,8 +100,8 @@ public class LoginPassword extends AppCompatActivity implements View.OnClickList
         checked = intent.getBooleanExtra("checked", false);
         mAuth = FirebaseAuth.getInstance();
         queue = Volley.newRequestQueue(getApplicationContext());
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
 
 
         reff = FirebaseDatabase.getInstance().getReference();
