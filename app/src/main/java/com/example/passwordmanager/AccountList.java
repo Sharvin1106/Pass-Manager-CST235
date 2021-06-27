@@ -163,8 +163,8 @@ public class AccountList extends AppCompatActivity implements LogOutTimerUtil.Lo
 
             }
         });
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-//                WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
 
     }
 
