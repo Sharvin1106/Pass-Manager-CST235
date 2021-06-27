@@ -7,6 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,13 +19,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -65,9 +72,7 @@ public class AccountList extends AppCompatActivity {
     Button encrypt;
     String decrypted,decrypted2;
 
-    private static final int STORAGE_REQUEST_CODE_EXPORT=1;
-    private static final int STORAGE_REQUEST_CODE_IMPORT=2;
-    private String[] storagePermission;
+    private Toolbar toolbar;
 
     private static final String key = "aesEncryptionKey";
     private static final String initVector = "encryptionIntVec";
@@ -76,16 +81,17 @@ public class AccountList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_list);
+
+        toolbar=findViewById(R.id.actionbar);
+        setSupportActionBar(toolbar);
+
         rv = findViewById(R.id.recyclerview);
 
         try{position_from_pin_page = Integer.parseInt(getIntent().getStringExtra("position"));
             x_from_pin_page = Integer.parseInt(getIntent().getStringExtra("x")); child=getIntent().getStringExtra("delete_child");
         }catch(Exception e){}
 
-
         fetchdata = new ArrayList<>();
-
-        storagePermission=new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         rootNode = FirebaseDatabase.getInstance();
@@ -117,8 +123,29 @@ public class AccountList extends AppCompatActivity {
             }
         });
 
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.add:
+                startActivity(new Intent(AccountList.this, Encrypt.class));
+                break;
+
+            case R.id.setting:
+                startActivity(new Intent(AccountList.this, Preference.class));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void setCards(List<account> fetchdata){
@@ -243,135 +270,6 @@ public class AccountList extends AppCompatActivity {
         }
 
         return null;
-    }
-
-
-
-    private boolean check(){
-        boolean result = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-
-    private void requestExport(){
-        ActivityCompat.requestPermissions(this,storagePermission,STORAGE_REQUEST_CODE_EXPORT);
-    }
-
-    private void requestImport(){
-        ActivityCompat.requestPermissions(this,storagePermission,STORAGE_REQUEST_CODE_IMPORT);
-    }
-
-    private void exportCSV() {
-        File folder=new File(Environment.getExternalStorageDirectory()+"/"+"BackUp");
-        //File folder = new File(String.valueOf(getExternalFilesDir("BackUp")));
-        boolean isFolderCreated = false;
-        if(!folder.exists()){
-            isFolderCreated = folder.mkdir();
-        }
-
-        Log.d("CSC_TAG","exportCSV: "+isFolderCreated);
-
-        String csvFilename = "BackUp.csv";
-
-        String fileP= folder.toString() + "/" + csvFilename;
-
-        try {
-            FileWriter fw = new FileWriter(fileP,false);
-            for(int i =0;i< fetchdata.size();i++)
-            {
-                fw.append(""+fetchdata.get(i).getApp_name());
-                fw.append(",");
-                fw.append(""+fetchdata.get(i).getUser_name());
-                fw.append(",");
-                fw.append(""+fetchdata.get(i).getPass_word());
-                fw.append(",");
-                fw.append(""+fetchdata.get(i).getE_mail());
-                fw.append(",");
-                fw.append(""+fetchdata.get(i).getNotes());
-                fw.append(",");
-                fw.append(""+fetchdata.get(i).getLast_edited());
-                fw.append(",");
-                fw.append(""+fetchdata.get(i).getLogo());
-                fw.append("\n");
-            }
-            fw.flush();
-            fw.close();
-
-            Toast.makeText(this,""+getFilesDir(),Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-    private void importCSV() {
-
-        rootNode = FirebaseDatabase.getInstance();
-        reference = rootNode.getReference().child("Account");
-
-        String path=Environment.getExternalStorageDirectory()+"/BackUp/"+"BackUp.csv";
-        File csvfile = new File(path);
-
-        String appname,username,password,email,notes,lastedited,logo;
-
-        if(csvfile.exists()){
-
-            String test = null;
-            try{
-                CSVReader csvReader = new CSVReader(new FileReader(csvfile.getAbsolutePath()));
-
-                String[] nextline;
-                while((nextline=csvReader.readNext())!=null){
-
-                    appname=nextline[0];
-                    username=nextline[1];
-                    password=nextline[2];
-                    email=nextline[3];
-                    notes=nextline[4];
-                    lastedited=nextline[5];
-                    logo=nextline[6];
-
-                    account helperClass = new account(appname,username,password,email,notes,lastedited,logo);
-                    reference.child(appname).setValue(helperClass);
-                }
-
-                Toast.makeText(this,"YES IMPORTED",Toast.LENGTH_SHORT).show();
-
-            }
-            catch(Exception e){
-                Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(this,"No Back Up Found...",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onRequestPermissionResult(int requestCode,@NonNull String[] permissions,@NonNull int[] grantResults){
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-
-        switch (requestCode){
-            case STORAGE_REQUEST_CODE_EXPORT:{
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    exportCSV();
-                }
-                else{
-                    Toast.makeText(this,"Storage Permission Required...",Toast.LENGTH_SHORT).show();
-                }
-            }
-            break;
-            case STORAGE_REQUEST_CODE_IMPORT:{
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    importCSV();
-                }
-                else{
-                    Toast.makeText(this,"Storage Permission Required...",Toast.LENGTH_SHORT).show();
-                }
-            }
-            break;
-        }
     }
 
 }
