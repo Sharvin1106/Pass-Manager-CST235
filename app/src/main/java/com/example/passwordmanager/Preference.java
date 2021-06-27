@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +49,7 @@ import java.util.regex.Pattern;
 
 public class Preference extends AppCompatActivity {
     LinearLayout shwCode, updPass, updPin, showLog, backup, recovery;
+    Button logout;
     ImageView backBtn;
     String userID;
     boolean updPassCheck;
@@ -80,10 +82,10 @@ public class Preference extends AppCompatActivity {
         shwCode = findViewById(R.id.securecode);
         updPass = findViewById(R.id.updpass);
         updPin = findViewById(R.id.updPin);
-        showLog = findViewById(R.id.logs);
         backBtn = findViewById(R.id.backBtn);
         backup = findViewById(R.id.backup);
         recovery = findViewById(R.id.recovery);
+        logout = findViewById(R.id.logoutbtn);
         reff = FirebaseDatabase.getInstance().getReference();
         number = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
         special = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
@@ -126,7 +128,7 @@ public class Preference extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Preference.this, Profile.class));
+                startActivity(new Intent(Preference.this, AccountList.class));
             }
         });
         updPin.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +147,23 @@ public class Preference extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 proceedRecovery();
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("remember","false");
+                editor.apply();
+                SharedPreferences preferences1 = getSharedPreferences("Users", MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = preferences1.edit();
+                editor1.putString("userId","");
+                editor1.apply();
+                Intent intent = new Intent(Preference.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -343,7 +362,7 @@ public class Preference extends AppCompatActivity {
                             .show();
                     return;
                 }
-                if(!oldPIN.getText().toString().trim().equals(oldPin)){
+                if(oldPIN.getText().toString().trim().equals(oldPin)){
                     oldPIN.setError("Old password not match");
                     oldPIN.requestFocus();
                     Snackbar.make(findViewById(R.id.playout), "Old Pin does not match", Snackbar.LENGTH_SHORT)
@@ -477,6 +496,7 @@ public class Preference extends AppCompatActivity {
     }
 
     private void exportCSV() {
+
         File folder=new File(Environment.getExternalStorageDirectory()+"/"+"BackUp");
         //File folder = new File(String.valueOf(getExternalFilesDir("BackUp")));
         boolean isFolderCreated = false;
@@ -515,7 +535,9 @@ public class Preference extends AppCompatActivity {
             Toast.makeText(this,""+getFilesDir(),Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.playout), "Please check your external storage", Snackbar.LENGTH_SHORT)
+                    .show();
 
         }
     }
@@ -557,7 +579,8 @@ public class Preference extends AppCompatActivity {
         }
         else
         {
-            Toast.makeText(this,"No Back Up Found...",Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.playout), "No backup found", Snackbar.LENGTH_SHORT)
+                    .show();
         }
     }
 

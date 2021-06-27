@@ -52,7 +52,7 @@ public class MultiFactorAuth extends AppCompatActivity {
         Log.d("phone num", num);
         reff = FirebaseDatabase.getInstance().getReference();
         initializeCode();
-        //String num = "+601136055713";
+
 
         sendVerificationCodeToUser(num);
 
@@ -111,7 +111,7 @@ public class MultiFactorAuth extends AppCompatActivity {
                     editor.apply();
                     Toast.makeText(MultiFactorAuth.this,"Unhecked",Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent(getApplicationContext(), Profile.class);
+                Intent intent = new Intent(getApplicationContext(), AccountList.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }

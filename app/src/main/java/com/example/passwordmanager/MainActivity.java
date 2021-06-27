@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                Intent intent = new Intent (MainActivity.this,Profile.class );
+                Intent intent = new Intent (MainActivity.this,AccountList.class );
                 intent.putExtra("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
                 startActivity(intent);
                 finish();
@@ -140,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
         editTextEmail.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
