@@ -44,7 +44,7 @@
       <li> The user will be blocked from login into the application,if the credentials entered is wrong for more than three times </li>
     </ul>
  </ol>
- <img src="" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img4.jpg" />
  
  <ol> 
   <li>Biometric Authentication</li>
@@ -52,7 +52,7 @@
       <li> If the user has already logged into the application, the next time when they enter the application they will have to use biometric to get access </li>
     </ul>
  </ol>
- <img src="" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img2.jpg" />
  
  <ol> 
   <li>Email Verification</li>
@@ -61,7 +61,8 @@
       <li> Also if an existing user, logged into the application from different device that is not used to sign up initially, they will need to verify again as well </li>
     </ul>
  </ol>
- <img src="" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img3.jpg" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img11.jpg"/>
  
  <ol> 
   <li>Two Factor Authentication</li>
@@ -69,7 +70,8 @@
       <li> The user has to go through the OTP process in order to access the application </li>
     </ul>
  </ol>
- <img src="" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img5.jpg" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img6.jpg"/>
  
   <ol> 
   <li>Screenshot feature disabled</li>
@@ -77,7 +79,7 @@
       <li> In order to secure the privacy of the user, we do not allow the user to screenshot at any screen that they input their credentials </li>
     </ul>
  </ol>
- <img src="" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img7.jpg" />
  
  <ol> 
   <li>Captcha</li>
@@ -85,9 +87,19 @@
       <li> Captcha is used in the application to verify that the application is used by humans, not bots that can cause harm or steal credentials </li>
     </ul>
  </ol>
- <img src="" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img8.jpg" />
+ <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img9.jpg"/>
  
  ## Other screenshots
-
-
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img10.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img12.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img13.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img14.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img15.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img16.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img17.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img18.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img19.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img20.jpg"/>
+<img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img21.jpg"/>
 
