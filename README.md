@@ -4,7 +4,7 @@
 
 <img src="https://github.com/Sharvin1106/Pass-Manager-CST235/blob/master/images/img1.jpg" 
      width = 400px
-     height = 400px
+     height = 300px
      />
 
 ## Introduction
